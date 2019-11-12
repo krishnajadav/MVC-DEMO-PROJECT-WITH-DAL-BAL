@@ -1,0 +1,179 @@
+﻿<html>
+<head>
+    <title>Home</title>
+
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <script src="https://unpkg.com/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+
+            $("#btnlogin").click(function () {
+
+                var fdata = new FormData();
+
+                fdata.append("email", $("#email").val());
+                fdata.append("fpass", $("#fpass").val());
+
+
+
+                $.ajax({
+                    url: '@Url.Action("CheckFacultyDetails", "Home")',
+                    type: "POST",
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    data: fdata,
+                    success: function (response) {
+
+                        if (response == 1) {
+
+                            swal("Successfully Login!", "", "success", {
+                                button: "Close",
+                            }).then((value) => {
+                               
+
+                                var url = '@Url.Action("Dashboard", "Home")';
+                                window.location.href = url;
+                            });
+
+                        }
+                        else {
+                            swal("Username or Password Invalide !", "", "error", {
+                                button: "Close",
+                            });
+
+                        }
+
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+
+
+
+            });
+
+
+
+        });
+
+
+    </script>
+
+</head>
+<body>
+
+    <nav class="navbar navbar-inverse">
+
+        <div class="container-fluid">
+
+            <div class="navbar-header">
+
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+
+                <a class="navbar-brand">Home</a>
+
+
+            </div>
+
+
+            <div class="collapse navbar-collapse" id="myNavbar">
+
+
+
+                <ul class="nav navbar-nav">
+
+
+
+                    <li class="active"><a>Login</a></li>
+
+                </ul>
+
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+
+
+    <div class="container">
+
+        <br />
+
+            <h1>Faculty Login</h1>
+            <br />
+
+   
+
+            <div class="row">
+
+                <div class="col-md-5">
+
+
+                    <div class="form-group">
+                        <input type="email" id="email" placeholder="Email" class="form-control" required="">
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-5">
+
+
+                    <div class="form-group">
+                        <input type="password" id="fpass" placeholder="Password" class="form-control" maxlength="30" required="">
+                    </div>
+
+
+
+                </div>
+
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-5">
+
+
+                    <input type="submit" id="btnlogin" class="btn btn-primary" value="Login"/>
+
+                </div>
+
+
+            </div>
+
+
+
+    </div>
+</body>
+</html>

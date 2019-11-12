@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CollegeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="faculty">
+          <Key>
+            <PropertyRef Name="fid" />
+          </Key>
+          <Property Name="fid" Type="int" Nullable="false" />
+          <Property Name="fname" Type="varchar" MaxLength="30" />
+          <Property Name="femail" Type="varchar" MaxLength="30" />
+          <Property Name="fpass" Type="varchar" MaxLength="40" />
+          <Property Name="fdept" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="student">
+          <Key>
+            <PropertyRef Name="stuid" />
+          </Key>
+          <Property Name="stuid" Type="int" Nullable="false" />
+          <Property Name="sfname" Type="varchar" MaxLength="30" />
+          <Property Name="slname" Type="varchar" MaxLength="30" />
+          <Property Name="semail" Type="varchar" MaxLength="40" />
+          <Property Name="smno" Type="varchar" MaxLength="10" />
+          <Property Name="sdept" Type="varchar" MaxLength="20" />
+          <Property Name="fid" Type="int" />
+          <Property Name="spass" Type="varchar" MaxLength="40" />
+        </EntityType>
+        <EntityType Name="test">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <Function Name="InUPStudent" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="stuid" Type="int" Mode="In" />
+          <Parameter Name="sfname" Type="varchar" Mode="In" />
+          <Parameter Name="slname" Type="varchar" Mode="In" />
+          <Parameter Name="semail" Type="varchar" Mode="In" />
+          <Parameter Name="smno" Type="varchar" Mode="In" />
+          <Parameter Name="sdept" Type="varchar" Mode="In" />
+          <Parameter Name="fid" Type="int" Mode="In" />
+          <Parameter Name="spass" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="CollegeModelStoreContainer">
+          <EntitySet Name="faculty" EntityType="Self.faculty" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="student" EntityType="Self.student" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="test" EntityType="Self.test" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CollegeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="faculty">
+          <Key>
+            <PropertyRef Name="fid" />
+          </Key>
+          <Property Name="fid" Type="Int32" Nullable="false" />
+          <Property Name="fname" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="femail" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="fpass" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="fdept" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="student">
+          <Key>
+            <PropertyRef Name="stuid" />
+          </Key>
+          <Property Name="stuid" Type="Int32" Nullable="false" />
+          <Property Name="sfname" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="slname" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="semail" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="smno" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="sdept" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="fid" Type="Int32" />
+          <Property Name="spass" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="CollegeEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="faculties" EntityType="Self.faculty" />
+          <EntitySet Name="students" EntityType="Self.student" />
+          <EntitySet Name="tests" EntityType="CollegeModel.test" />
+          <FunctionImport Name="InUPStudent">
+            <Parameter Name="stuid" Mode="In" Type="Int32" />
+            <Parameter Name="sfname" Mode="In" Type="String" />
+            <Parameter Name="slname" Mode="In" Type="String" />
+            <Parameter Name="semail" Mode="In" Type="String" />
+            <Parameter Name="smno" Mode="In" Type="String" />
+            <Parameter Name="sdept" Mode="In" Type="String" />
+            <Parameter Name="fid" Mode="In" Type="Int32" />
+            <Parameter Name="spass" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="test">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CollegeModelStoreContainer" CdmEntityContainer="CollegeEntities">
+          <EntitySetMapping Name="faculties">
+            <EntityTypeMapping TypeName="CollegeModel.faculty">
+              <MappingFragment StoreEntitySet="faculty">
+                <ScalarProperty Name="fid" ColumnName="fid" />
+                <ScalarProperty Name="fname" ColumnName="fname" />
+                <ScalarProperty Name="femail" ColumnName="femail" />
+                <ScalarProperty Name="fpass" ColumnName="fpass" />
+                <ScalarProperty Name="fdept" ColumnName="fdept" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="students">
+            <EntityTypeMapping TypeName="CollegeModel.student">
+              <MappingFragment StoreEntitySet="student">
+                <ScalarProperty Name="stuid" ColumnName="stuid" />
+                <ScalarProperty Name="sfname" ColumnName="sfname" />
+                <ScalarProperty Name="slname" ColumnName="slname" />
+                <ScalarProperty Name="semail" ColumnName="semail" />
+                <ScalarProperty Name="smno" ColumnName="smno" />
+                <ScalarProperty Name="sdept" ColumnName="sdept" />
+                <ScalarProperty Name="fid" ColumnName="fid" />
+                <ScalarProperty Name="spass" ColumnName="spass" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tests">
+            <EntityTypeMapping TypeName="CollegeModel.test">
+              <MappingFragment StoreEntitySet="test">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="InUPStudent" FunctionName="CollegeModel.Store.InUPStudent" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

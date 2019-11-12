@@ -1,0 +1,634 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html>
+<head>
+    <title>Dashboard</title>
+
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <script src="https://unpkg.com/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
+
+    <script>
+
+
+  function check(e,obj)
+   {
+
+
+		  if(obj.id=="mno")
+		  {
+		       	var regex = /^[0-9]+/;
+				if(!regex.test(e.key))
+				{
+				             var str=obj.value;
+				             var withNoDigits = str.replace(/[^0-9]/g, '');	         
+							 obj.value=withNoDigits;
+				}
+		  }
+		  else if(obj.id=="cpass")
+		  {
+
+				var pass=document.getElementById("pass");
+				if(pass.value!=obj.value)
+				{
+				  alert("Password And Confirm Password shoud be same");
+				  obj.value="";
+				}
+
+		  }
+		  else if (obj.id == "email") {
+		      var re = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+		      if (!re.test(obj.value)) {
+		          alert("Enter Correct Email");
+		          obj.value = "";
+		      }
+		  }
+		  else
+		  {
+
+		      var regex = /^[a-z]+/;
+		      if (!regex.test(e.key)) {
+		          var str = obj.value;
+		          var withNoDigits = str.replace(/[^a-z]/g, '');
+		          obj.value = withNoDigits;
+		      }
+
+		   }
+   }
+
+  var Display,clear;
+
+  $(document).ready(function () {
+
+      $('#StudentTable').DataTable();
+
+
+      Display = function () {
+          var URL = '@Url.Action("GetStudentData", "Home")';
+
+          oTable = $('#StudentTable').DataTable({
+              dom: 'Bfrtip',
+              "bPaginate": false,
+              buttons: [
+                  'excel', 'pdf', 'print'
+              ],
+              "processing": false,
+              "serverSide": false,
+              "bSort": false,
+              "searching": true,
+              "sAjaxSource": URL,
+              "pageLength": 10,
+              "bDestroy": true,
+              "bLengthChange": true,
+              "scrollX": true,
+              "scrollY": ($(window).height() - 200),
+              "pagingType": "full_numbers",
+              "sEmptyTable": "Loading data from server",
+              "fnServerData": function (sSource, aoData, fnCallback) {
+
+                  $.ajax({
+                      "dataType": 'json',
+                      "type": "POST",
+                      "url": sSource,
+                      "data": aoData,
+                      "success": fnCallback
+                  });
+              },
+              "columns": [
+                                {
+
+                                    "sWidth": "5%",
+                                    "bSortable": true,
+                                    "sClass": "TextCenter ID",
+                                    "visible": false,
+                                    "render": function (data, type, row, meta) {
+                                        return (row[0])
+                                    }
+                                },
+                                {
+
+                                    "sWidth": "5%",
+                                    "sClass": "rightalign ",
+                                    "render": function (data, type, row, meta) {
+                                        return (row[1])
+                                    }
+                                },
+                                 {
+
+                                     "sWidth": "10%",
+                                     "sClass": "rightalign TA_C",
+                                     "render": function (data, type, row, meta) {
+                                         return (row[2])
+                                     }
+                                 },
+
+                                  {
+
+                                      "sWidth": "10%",
+                                      "sClass": "rightalign TA_C",
+                                      "render": function (data, type, row, meta) {
+                                          return (row[3])
+                                      }
+                                  },
+                                   {
+
+                                       "sWidth": "10%",
+                                       "sClass": "rightalign TA_C",
+                                       "render": function (data, type, row, meta) {
+                                           return (row[4])
+                                       }
+                                   },
+                                    {
+
+                                        "sWidth": "10%",
+                                        "sClass": "rightalign TA_C",
+                                        "render": function (data, type, row, meta) {
+                                            return (row[5])
+                                        }
+                                    },
+
+                                {
+                                    "swidth": "5%",
+                                    "sclass": "TextCenter Action",
+                                    "render": function (data, type, row, meta) {
+                                        return '<button class="btn btn-primary fa fa-check-square"  title="Edit" onclick="editdata(' + row[0] + ',\'' + row[1] + '\',\'' + row[2] + '\',\''+row[3]+'\',\''+row[4]+'\',\''+row[5]+'\')"></button>' +
+                                    '<button class="btn btn-danger glyphicon glyphicon-trash" title="Delete"  onclick="deletedata(' + row[0] + ')" style="margin-left: 10px;"></button>';
+
+                                    }
+                                }
+
+
+              ], "fnInitComplete": function (oSetting, json) {
+
+              }
+
+
+          });
+      }
+
+
+
+      Display();
+
+
+
+
+
+
+
+
+      $("#btninup").click(function () {
+
+
+          if (requiredcheck()) {
+              swal("Please Enter Data", "", "error", {
+                  button: "Close",
+              });
+          }
+          else {
+
+              var fdata = new FormData();
+              fdata.append("Id", $("#hdnID").val());
+              fdata.append("fname", $("#fname").val());
+              fdata.append("lname", $("#lname").val());
+              fdata.append("email", $("#email").val());
+              fdata.append("mno", $("#mno").val());
+              fdata.append("spass", $("#pass").val());
+
+
+              if ($("#btninup").val() == "Insert")
+              {
+                  $.ajax({
+                      url: '@Url.Action("checkStudentDetail", "Home")',
+                      type: "POST",
+                      contentType: false, // Not to set any content header
+                      processData: false, // Not to process data
+                      data: fdata,
+                      success: function (result) {
+                          if (result == 1) {
+
+
+
+                              $.ajax({
+                                  url: '@Url.Action("InupStudent", "Home")',
+                                  type: "POST",
+                                  contentType: false, // Not to set any content header
+                                  processData: false, // Not to process data
+                                  data: fdata,
+                                  success: function (result) {
+                                      if (result == 1) {
+
+                                          swal("Successfully Student Inserted!", "", "success", {
+                                              button: "Close",
+                                          });
+                                          $("#btninup").val("Insert");
+                                          Display();
+                                          clear();
+
+                                      }
+                                      else {
+
+                                          swal("Student Not Inserted", "", "error", {
+                                              button: "Close",
+                                          });
+                                      }
+
+                                  },
+                                  error: function (err) {
+                                      alert(err.statusText);
+                                  }
+                              });
+
+
+
+                          }
+                          else {
+
+                              swal("This User Already Exists", "", "error", {
+                                  button: "Close",
+                              });
+                          }
+
+                      },
+                      error: function (err) {
+                          alert(err.statusText);
+                      }
+                  });
+              }
+              else
+              {
+
+
+                  
+
+                  fdata.append("upmno", $("#hdnmno").val());
+                  fdata.append("upemail", $("#hdnemail").val());
+
+                  $.ajax({
+                      url: '@Url.Action("checkUpdate", "Home")',
+                      type: "POST",
+                      contentType: false, // Not to set any content header
+                      processData: false, // Not to process data
+                      data: datra,
+                      success: function (result) {
+                          if (result == 1) {
+
+                  $.ajax({
+                      url: '@Url.Action("InupStudent", "Home")',
+                      type: "POST",
+                      contentType: false, // Not to set any content header
+                      processData: false, // Not to process data
+                      data: fdata,
+                      success: function (result) {
+                          if (result == 1) {
+
+                              swal("Successfully Student Updated!", "", "success", {
+                                  button: "Close",
+                              });
+                              $("#btninup").val("Insert");
+                              Display();
+                              clear();
+
+                          }
+                          else {
+
+                              swal("Student Not Updated", "", "error", {
+                                  button: "Close",
+                              });
+                          }
+
+                      },
+                      error: function (err) {
+                          alert(err.statusText);
+                      }
+                  });
+
+
+                          }
+                          else {
+
+                              swal("This User Already Exists", "", "error", {
+                                  button: "Close",
+                              });
+                          }
+
+                      },
+                      error: function (err) {
+                          alert(err.statusText);
+                      }
+                  });
+
+              }
+
+          }
+
+      });
+      
+
+
+      clear=function()
+      {
+           $("#fname").val('');
+          $("#lname").val('');
+         $("#email").val('');
+           $("#mno").val('');
+           $("#pass").val('');
+           $("#cpass").val('');
+           $("#btninup").val('Insert');
+      }
+
+
+      function requiredcheck()
+      {
+          var isValid = false;
+          $('input[type="text"]').each(function () {
+              if ($(this).val() == '') {
+                  isValid = true; 
+              }
+          });
+
+
+          if ($("#mno").val().length != 10)
+          {
+            
+              isValid = true;
+          }
+
+          return isValid;
+      }
+
+
+
+
+  });
+
+        function editdata(id,fname,lname,email,mno,pass)
+        {
+           
+            $("#hdnID").val(id);
+            $("#hdnemail").val(email);
+            $("#hdnmno").val(mno);
+
+            $("#fname").val(fname);
+            $("#lname").val(lname);
+            $("#email").val(email);
+            $("#mno").val(mno);
+            $("#pass").val(pass);
+            $("#cpass").val(pass);
+            $("#btninup").val("Update");
+
+        }
+
+        function deletedata(ID) {
+            bootbox.confirm({
+                title: "Please Confirm",
+                message: "Are you sure to delete this record.",
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Cancel'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirm'
+                    }
+                },
+                callback: function (result) {
+                    if (result == true) {
+                        var data = { "ID": ID };
+                        $.ajax({
+                            url: '@Url.Action("deleteRecord", "Home")',
+                            type: "POST",
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify(data),
+                            dataType: "json",
+                            success: function (response) {
+
+                                if (response == 1) {
+                                    swal("Successfully Student Deleted!", "", "success", {
+                                        button: "Close",
+                                    });
+
+                                    Display();
+                                    clear();
+
+
+                                }
+                                else {
+                                    swal("Student Not Deleted!", "", "error", {
+                                        button: "Close",
+                                    });
+
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+
+
+    </script>
+
+
+
+
+    <style>
+    .dataTables_scrollBody{
+      position: relative;
+    overflow: auto;
+    margin-top:-3%;
+    height:unset;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-inverse">
+
+        <div class="container-fluid">
+
+            <div class="navbar-header">
+
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+
+                <a class="navbar-brand">Home</a>
+
+
+            </div>
+
+
+            <div class="collapse navbar-collapse" id="myNavbar">
+
+
+
+                <ul class="nav navbar-nav">
+
+
+
+                    <li class="active"><a>Dashboard</a></li>
+
+                    <li><a href="@Url.Action("Logout", "Home")">Logout</a></li>
+
+                </ul>
+
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+
+
+    <div class="container">
+
+        <br />
+
+        <center>
+
+            <h1>Welcome @Session["Uname"].ToString() from Department @Session["dept"].ToString()</h1>
+            <br />
+
+        </center>
+
+
+            <div class="row">
+
+                <div class="col-md-1">
+
+                </div>
+
+                <div class="col-md-5">
+
+                    <div class="form-group">
+                        <input type="text" id="fname" placeholder="Student First Name" class="form-control" maxlength="30" required="" onkeyup="check(event,this)">
+                    </div>
+
+                </div>
+
+                <div class="col-md-5">
+
+
+                    <div class="form-group">
+                        <input type="text" id="lname" placeholder="Student Last Name" class="form-control" maxlength="30" required="" onkeyup="check(event,this)">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-md-1">
+
+                </div>
+
+                <div class="col-md-5">
+
+                    <div class="form-group">
+                        <input type="email" id="email" placeholder="Email" class="form-control" required="" onchange="check(event,this)">
+                    </div>
+
+                </div>
+
+                <div class="col-md-5">
+
+                    <div class="form-group">
+                        <input type="text" id="mno" placeholder="Mobile Number" maxlength="10" class="form-control" required="" onkeyup="check(event,this)">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-md-1">
+
+                </div>
+
+                <div class="col-md-5">
+
+                    <div class="form-group">
+                        <input type="Password" id="pass" placeholder="Password" class="form-control" maxlength="20" required="">
+                    </div>
+
+                </div>
+
+                <div class="col-md-5">
+
+                    <div class="form-group">
+                        <input type="Password" id="cpass" placeholder="Confirm Password" class="form-control" onchange="check(event,this)" maxlength="20" required="" />
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-md-1">
+
+                </div>
+
+                <div class="col-md-1">
+                    <input type="hidden" id="hdnID" value="0" />
+                    <input type="hidden" id="hdnemail" />
+                    <input type="hidden" id="hdnpass" />
+                    <input type="submit" id="btninup" class="btn btn-primary" value="Insert" />
+
+                </div>
+
+            </div>
+        <br />
+        <div class="row">
+
+            <div class="col-md-9" style="margin-left:8%">
+                <table id="StudentTable" class="table table-striped table-bordered table-responsive" style="width:100%">
+                    <thead>
+                        <tr>
+                            <td>ID</td>
+                            <td>First Name</td>
+                            <td>Last Name</td>
+                            <td>Email</td>
+                            <td>Mobile Number</td>
+                            <td>Password</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+
+        </div>
+
+    </div>
+
+</body>
+</html>
